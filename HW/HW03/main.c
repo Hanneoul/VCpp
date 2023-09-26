@@ -25,20 +25,20 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine,
 	// 윈도우 클래스 값 설정
 	wc.hInstance = hInstance;
 	wc.lpszClassName = TEXT("Computer Software");
-	wc.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-	wc.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
+	wc.hCursor = LoadCursor(NULL, IDC_ARROW);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
 	wc.lpfnWndProc = WindowProc;
 
 	// 윈도우 클래스 등록.
-	if (RegisterClass(&wc) == false)
+	if (RegisterClass(&wc) == 0)
 	{
 		exit(-1);	//예외
 	}
 
 	// Window viewport 영역 조정
 	RECT rect = { 0, 0, 1600, 900 };
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, 0);
 	int width = rect.right - rect.left;
 	int height = rect.bottom - rect.top;
 
