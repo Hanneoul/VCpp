@@ -1,9 +1,7 @@
-#ifdef _DEBUG_
 #ifdef UNICODE
 #pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
 #else
 #pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-#endif
 #endif
 
 #include <windows.h>
@@ -40,76 +38,91 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	break;
 
-	case WM_LBUTTONUP:
-	{
-		///** 사각형 그리기
-		//*/
-		//HDC hdc = GetDC(hwnd);
-		//RECT rect = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
-		//
-
-		//// 그리기
-		//FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW+1)); // 사각형을 빨간색으로 채우기
-		//ReleaseDC(hwnd, hdc);
-		endPoint.x = LOWORD(lParam);
-		endPoint.y = HIWORD(lParam);
-		
-		isMouseLButtonPressed = 0;
-
-
-	}
-
-	case WM_PAINT:
-	{
-		HDC hdc = GetDC(hwnd);
-
-		if (isMouseLButtonPressed)
+	//강의에 안나왔지만 마우스가 움직일때의 이벤트를 뜻합니다.
+	case WM_MOUSEMOVE:
 		{
-			RECT rect;
-			GetClientRect(hwnd, &rect);
-			FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW + 1));
+			// 마우스 이동 중
+			if (isMouseLButtonPressed)
+			{
+				endPoint.x = LOWORD(lParam);
+				endPoint.y = HIWORD(lParam);
+			
+				// WM_PAINT 메시지를 유발하여 네모를 화면에 그립니다.
+				InvalidateRect(hwnd, NULL, TRUE);
+			}
+		}
+		break;
 
-			MoveToEx(hdc, startPoint.x, startPoint.y, NULL);
-			LineTo(hdc, endPoint.x, endPoint.y);
+	case WM_LBUTTONUP:
+		{
+			///** 사각형 그리기
+			//*/
+			//HDC hdc = GetDC(hwnd);
+			//RECT rect = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+			//
+
+			//// 그리기
+			//FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW+1)); // 사각형을 빨간색으로 채우기
+			//ReleaseDC(hwnd, hdc);
+			endPoint.x = LOWORD(lParam);
+			endPoint.y = HIWORD(lParam);
+		
+			isMouseLButtonPressed = 0;
+
+			// WM_PAINT 메시지를 유발하여 네모를 화면에 그립니다.
+			InvalidateRect(hwnd, NULL, TRUE);
 		}
 
-		ReleaseDC(hwnd, hdc);
+		case WM_PAINT:
+		{
+			HDC hdc = GetDC(hwnd);
 
-		/** 사각형 그리기
-		*/
-		//HDC hdc = GetDC(hwnd);
-		//RECT rect = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
-		//HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 255)); // 핑크 브러시 생성
+			if (isMouseLButtonPressed)
+			{
+				RECT rect;
+				GetClientRect(hwnd, &rect);
+				FillRect(hdc, &rect, (HBRUSH)(COLOR_WINDOW + 1));
 
+				MoveToEx(hdc, startPoint.x, startPoint.y, NULL);
+				LineTo(hdc, endPoint.x, endPoint.y);
+			}
 
-		//// 그리기
-		//FillRect(hdc, &rect, hBrush); // 사각형을 빨간색으로 채우기
-		//ReleaseDC(hwnd, hdc);
+			ReleaseDC(hwnd, hdc);
 
-
-		/** 타원 그리기
-		*/
-		//HDC hdc = GetDC(hwnd); // 디바이스 컨텍스트 얻기
-		//
-		//HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 255)); // 핑크 브러시 생성
-		//SelectObject(hdc, hBrush);
-
-		//// 타원 그리기
-		//Ellipse(hdc, 50, 50, 200, 150); // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (200, 150)까지의 타원
-
-		//DeleteObject(hBrush);
-
-		//ReleaseDC(hwnd, hdc); // 디바이스 컨텍스트 해제
+			/** 사각형 그리기
+			*/
+			//HDC hdc = GetDC(hwnd);
+			//RECT rect = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+			//HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 255)); // 핑크 브러시 생성
 
 
-	}
+			//// 그리기
+			//FillRect(hdc, &rect, hBrush); // 사각형을 빨간색으로 채우기
+			//ReleaseDC(hwnd, hdc);
+
+
+			/** 타원 그리기
+			*/
+			//HDC hdc = GetDC(hwnd); // 디바이스 컨텍스트 얻기
+			//
+			//HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 255)); // 핑크 브러시 생성
+			//SelectObject(hdc, hBrush);
+
+			//// 타원 그리기
+			//Ellipse(hdc, 50, 50, 200, 150); // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (200, 150)까지의 타원
+
+			//DeleteObject(hBrush);
+
+			//ReleaseDC(hwnd, hdc); // 디바이스 컨텍스트 해제
+
+
+		}
 	break;
 	case WM_DESTROY:
 		PostQuitMessage(0);
 		break;
 	default:
-		return DefWindowProc(hwnd, uMsg, wParam, lParam);
-		break;
+		return DefWindowProc(hwnd, uMsg, wParam, lParam);		
 	}
 
 	return S_OK;
