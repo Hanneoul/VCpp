@@ -1,8 +1,17 @@
-//#ifdef UNICODE
-//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
-//#else
-//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-//#endif
+//#define DEBUG
+#ifdef UNICODE
+	#ifdef DEBUG
+	#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+	#else
+	#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:WINDOWS")
+	#endif // DEBUG
+#else
+	#ifdef DEBUG
+	#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+	#else
+	#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:WINDOWS")
+	#endif // DEBUG
+#endif
 
 #include <windows.h>
 
