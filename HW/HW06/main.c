@@ -1,59 +1,62 @@
-#ifdef UNICODE
-#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
-#else
-#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
-#endif
+//#ifdef UNICODE
+//#pragma comment(linker, "/entry:wWinMainCRTStartup /subsystem:console")
+//#else
+//#pragma comment(linker, "/entry:WinMainCRTStartup /subsystem:console")
+//#endif
 
 #include <windows.h>
 
 POINT startPoint = { 0 };
 POINT endPoint = { 0 };
-int isMouseLButtonPressed = 0;
+int isKeyPressed = 0;
 
 // 윈도우의 이벤트를 처리하는 콜백(Callback) 함수.
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc = GetDC(hwnd);
-	RECT rect = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
-	HBRUSH hBrush;
+	RECT rect_user = { 5, 5, 10, 10 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+	RECT rect_target = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+	HBRUSH hBrush_user = CreateSolidBrush(RGB(0, 0, 255));
+	HBRUSH hBrush_target = CreateSolidBrush(RGB(255, 0, 255));
+	HBRUSH hBrush_eraser = CreateSolidBrush(RGB(255, 255, 255));
+	
+
 	switch (uMsg)
 	{
 	case WM_KEYDOWN:
-		if (wParam == VK_LEFT)
-		{
-			isMouseLButtonPressed = 1;
-			hBrush = CreateSolidBrush(RGB(255, 0, 255)); // 핑크 브러시 생성
-			// 그리기
-			FillRect(hdc, &rect, hBrush); // 사각형을 빨간색으로 채우기		
-		}
+		isKeyPressed = 1;
 		break;
 	case WM_KEYUP:
-		if (wParam == VK_LEFT)
-		{
-			isMouseLButtonPressed = 0;
-
-			hBrush = CreateSolidBrush(RGB(255, 255, 255)); // 핑크 브러시 생성
-			// 그리기
-			FillRect(hdc, &rect, hBrush); // 사각형을 빨간색으로 채우기
-		}
+		isKeyPressed = 0;
 		break;
-
 	case WM_PAINT:
 	{	
+		if (isKeyPressed)
+		{
+			FillRect(hdc, &rect_user, hBrush_user);
+			FillRect(hdc, &rect_target, hBrush_target);
+		}
+		else
+		{
+			FillRect(hdc, &rect_user, hBrush_eraser);
+			FillRect(hdc, &rect_target, hBrush_eraser);
+		}
 		
-
-
 	}
 	break;
 	case WM_CLOSE:
-		PostQuitMessage(0);
 		DestroyWindow(hwnd);
-
+		break;
+	case WM_DESTROY:
+		PostQuitMessage(0);
 		break;
 	default:
 		return DefWindowProc(hwnd, uMsg, wParam, lParam);
 	}
 	
+	DeleteObject(hBrush_user);
+	DeleteObject(hBrush_target);
+	DeleteObject(hBrush_eraser);
 	ReleaseDC(hwnd, hdc);
 
 	return S_OK;
@@ -74,6 +77,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	wc.hCursor = LoadCursor(NULL, IDC_CROSS);
 	wc.style = CS_HREDRAW | CS_VREDRAW;
+	wc.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
 	wc.lpfnWndProc = WindowProc;
 
 	// 윈도우 클래스 등록.
@@ -121,14 +125,14 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 	// 메시지 처리.
 	while (msg.message != WM_QUIT)
 	{	
-		if (GetMessage(&msg, hwnd, 0, 0))
+		if (GetMessage(&msg, NULL, 0, 0))
 		{
 			// 메시지 해석해줘.
 			TranslateMessage(&msg);
 			// 메시지를 처리해야할 곳에 전달해줘.
 			DispatchMessage(&msg);
 		}
-		//if(PeekMessage(&msg, hwnd, 0, 0, PM_REMOVE))
+		//if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		//{
 		//	// 메시지 해석해줘.
 		//	TranslateMessage(&msg);
