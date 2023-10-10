@@ -39,7 +39,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		else
 		{
 			FillRect(hdc, &rect_user, hBrush_eraser);
-			FillRect(hdc, &rect_target, hBrush_eraser);
+			FillRect(hdc, &rect_target, hBrush_target);
 		}
 		
 	}
