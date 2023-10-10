@@ -19,7 +19,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	HBRUSH hBrush_user = CreateSolidBrush(RGB(0, 0, 255));
 	HBRUSH hBrush_target = CreateSolidBrush(RGB(255, 0, 255));
 	HBRUSH hBrush_eraser = CreateSolidBrush(RGB(255, 255, 255));
-	
+	const wchar_t* text = L"Crash!!!";
 
 	switch (uMsg)
 	{
@@ -32,12 +32,13 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_PAINT:
 	{	
 		if (isKeyPressed)
-		{
+		{			
 			FillRect(hdc, &rect_user, hBrush_user);
 			FillRect(hdc, &rect_target, hBrush_target);
 		}
 		else
-		{
+		{	
+			TextOut(hdc, 10, 10, text, lstrlen(text));
 			FillRect(hdc, &rect_user, hBrush_eraser);
 			FillRect(hdc, &rect_target, hBrush_target);
 		}
