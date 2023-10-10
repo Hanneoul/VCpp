@@ -10,12 +10,14 @@ POINT startPoint = { 0 };
 POINT endPoint = { 0 };
 int isKeyPressed = 0;
 
+RECT rect_user = { 5, 5, 10, 10 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+RECT rect_target = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+
 // 윈도우의 이벤트를 처리하는 콜백(Callback) 함수.
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	HDC hdc = GetDC(hwnd);
-	RECT rect_user = { 5, 5, 10, 10 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
-	RECT rect_target = { 50, 50, 150, 150 }; // 왼쪽 상단 좌표 (50, 50)에서 오른쪽 하단 좌표 (150, 150)까지의 사각형
+	
 	HBRUSH hBrush_user = CreateSolidBrush(RGB(0, 0, 255));
 	HBRUSH hBrush_target = CreateSolidBrush(RGB(255, 0, 255));
 	HBRUSH hBrush_eraser = CreateSolidBrush(RGB(255, 255, 255));
@@ -25,6 +27,12 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_KEYDOWN:
 		isKeyPressed = 1;
+		if (wParam == VK_RIGHT)
+		{
+			rect_user.left += 5;
+			rect_user.right += 5;
+			InvalidateRect(hwnd, NULL, TRUE);
+		}
 		break;
 	case WM_KEYUP:
 		isKeyPressed = 0;
