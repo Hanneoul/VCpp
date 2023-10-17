@@ -1,9 +1,5 @@
 #include <windows.h>
 
-// 전역 변수
-HINSTANCE hInst;
-HWND hWnd;
-HWND hButton1, hButton2;
 
 // 박스를 나타내는 변수
 bool isBoxVisible = false;
@@ -17,7 +13,7 @@ void DrawBox(HWND hWnd, HDC hdc) {
         // 박스 그리기
         HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 0)); // 빨간색 박스
         SelectObject(hdc, hBrush);
-        Rectangle(hdc, 80, 20, 140, 80);
+        Rectangle(hdc, 300, 50, 500, 200);
         DeleteObject(hBrush);
     }
 }
@@ -53,34 +49,14 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
     return 0;
 }
 
-// 윈도우 초기화 함수
-BOOL InitInstance(HINSTANCE hInstance, int nCmdShow) {
-    hInst = hInstance;
 
-    hWnd = CreateWindow(
-        L"ButtonWindowClass", L"Win32 Button Example", WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
-
-    if (!hWnd) {
-        return FALSE;
-    }
-
-    hButton1 = CreateWindow(
-        L"BUTTON", L"Add Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        20, 20, 60, 60, hWnd, (HMENU)1, hInstance, NULL);
-
-    hButton2 = CreateWindow(
-        L"BUTTON", L"Remove Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        20, 200, 60, 60, hWnd, (HMENU)2, hInstance, NULL);
-
-    ShowWindow(hWnd, nCmdShow);
-    UpdateWindow(hWnd);
-
-    return TRUE;
-}
 
 // 프로그램 진입점
 int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow) {
+    
+    HWND hWnd;
+    HWND hButton1, hButton2;
+
     WNDCLASSEX wcex;
     wcex.cbSize = sizeof(WNDCLASSEX);
     wcex.style = CS_HREDRAW | CS_VREDRAW;
@@ -99,9 +75,24 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
         return 1;
     }
 
-    if (!InitInstance(hInstance, nCmdShow)) {
-        return 1;
+    hWnd = CreateWindow(
+        L"ButtonWindowClass", L"Win32 Button Example", WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, NULL, NULL, hInstance, NULL);
+
+    if (!hWnd) {
+        return FALSE;
     }
+
+    hButton1 = CreateWindow(
+        L"BUTTON", L"Add Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+        20, 20, 200, 60, hWnd, (HMENU)1, hInstance, NULL);
+
+    hButton2 = CreateWindow(
+        L"BUTTON", L"Remove Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+        20, 200, 200, 60, hWnd, (HMENU)2, hInstance, NULL);
+
+    ShowWindow(hWnd, nCmdShow);
+    UpdateWindow(hWnd);
 
     MSG msg;
     while (GetMessage(&msg, NULL, 0, 0)) {
