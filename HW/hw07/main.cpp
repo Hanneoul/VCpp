@@ -85,11 +85,11 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmd
 
     hButton1 = CreateWindow(
         L"BUTTON", L"Add Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        20, 20, 200, 60, hWnd, (HMENU)1, hInstance, NULL);
+        8, 8, 150, 50, hWnd, (HMENU)1, hInstance, NULL);
 
     hButton2 = CreateWindow(
         L"BUTTON", L"Remove Box", WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
-        20, 200, 200, 60, hWnd, (HMENU)2, hInstance, NULL);
+        20, 200, 150, 50, hWnd, (HMENU)2, hInstance, NULL);
 
     ShowWindow(hWnd, nCmdShow);
     UpdateWindow(hWnd);
